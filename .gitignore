@@ -1,0 +1,4 @@
+python/secrets.py
+**/*.pyc
+data/*
+.vscode/*

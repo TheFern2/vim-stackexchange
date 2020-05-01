@@ -60,9 +60,12 @@ def favorites(query=None, site=main_site):
 '''
 def favorites_query(query, search_body=False, site=main_site):
 
+    vim.command('vnew __stackexchange__')
+
     # count the number of files
     num_of_files = len(os.listdir("{}/{}".format(data_dir, site)))
     question_number = 1
+    lines = []
 
     for index in range(num_of_files):
         try:
@@ -83,20 +86,24 @@ def favorites_query(query, search_body=False, site=main_site):
 
                 if ( query_lower in tags or query_lower in title
                     or query_cap in tags or query_cap in title ):
-                    print(title)
-                    print(link)
-                    print(question_number)
+                    
+                    vim.current.buffer.append("Q{}. {}".format(question_number, title))
+                    #lines.append("Q{}. {}".format(question_number, title))
+                    #_output_preview_text(lines)
+                    #print(title)
+                    #print(link)
+                    #print(question_number)
                     question_number += 1
-                    print("---------------------------------")
+                    #print("---------------------------------")
                     continue
 
                 if search_body:
                     if(query_lower in body or query_cap in body):
-                        print(title)
-                        print(link)
-                        print(question_number)
+                        #print(title)
+                        #print(link)
+                        #print(question_number)
                         question_number += 1
-                        print("---------------------------------")
+                        #print("---------------------------------")
 
         except Exception as e:
             print(e)
@@ -148,7 +155,6 @@ def fetch_favorites(site=main_site):
         favorites = requests.get(main_url + favorites_url)
         favorites_json = favorites.json()
         has_more = favorites_json['has_more']
-        #data['items'].append(favorites_json['items'])
         json.dump(favorites_json, f)
         f.close()
         print("Has More {}, Number of Items {}".format(has_more, len(favorites_json['items'])))
@@ -159,8 +165,15 @@ def fetch_favorites(site=main_site):
 def say_hello(name):
     vim.current.buffer.append("Hello {}".format(name))
 
+
+def close_buffer(buffer_name=None):
+    #vim.command('bd! %s'.format(buffer_name))
+    vim.command('bd! __stackexchange__')
+
+
+
 #favorites('vim')
-favorites_query('git')
+#favorites_query('git')
 #favorites_query('pip')
 #fetch_all_favorites_offline()
 #fetch_favorites()

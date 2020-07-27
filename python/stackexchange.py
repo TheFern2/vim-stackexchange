@@ -5,7 +5,8 @@ import time
 from os.path import normpath, join
 import imp
 import os
-#import vim
+import errno
+import vim
 
 # need this to be able to test with vim and without vim
 # though we don't want an error, is expected not to find vim
@@ -149,6 +150,16 @@ def fetch_favorites(site=main_site):
     page = 1
     
     while has_more:
+        # TODO create folder data/{site} if it doesn't exist
+        site_path = "{}/{}/".format(data_dir, site)
+
+        if not os.path.exists(os.path.dirname(site_path)):
+            try:
+                os.makedirs(os.path.dirname(site_path))
+            except OSError as exc: # Guard against race condition
+                if exc.errno != errno.EEXIST:
+                    raise
+
         f=open("{}/{}/page{}.json".format(data_dir, site, page), "w+")
         # filter is to retrieve body of question too.
         favorites_url = '/me/favorites?page=%d&pagesize=100&order=desc&sort=activity&site=%s&access_token=%s&key=%s&filter=!9Z(-wwYGT' % (page, site, access_token, key)
@@ -162,7 +173,7 @@ def fetch_favorites(site=main_site):
         time.sleep(1) # delay to avoid getting kicked out of the api by too many quick requests
     
 
-def say_hello(name):
+def say_hello(name="John"):
     vim.current.buffer.append("Hello {}".format(name))
 
 

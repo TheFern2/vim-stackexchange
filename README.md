@@ -68,9 +68,11 @@ Examples:
 After running fetch commands for stackoverflow, and askubuntu.
 
 Stackoverflow query of python favorites:
+
 ![stackoverflow](/images/stackoverflow.png)
 
 Askubuntu query of cron favorites:
+
 ![askubuntu](/images/askubuntu.png)
 
 ## DONE

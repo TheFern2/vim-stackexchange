@@ -8,8 +8,9 @@ It can also download all your favorites for any site, and be able to filter them
 ## Requirements
 
 - vim (I've tested on neovim, let me know if is not compatible with vim)
-- python2
+- python2.7
 - requests package
+- HTMLParser package
 
 ## Setup
 

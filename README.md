@@ -48,17 +48,19 @@ These are the current vim commands:
 - SEFetchFavorites (stackoverflow is the default site). This command will fetch all your favorites, and store them in the `plugin_dir/data/site`
 
 Examples:
+
 ```
 :SEFetchFavorites
-:SEFetchFavorites askubuntu 
+:SEFetchFavorites askubuntu
 ```
 
 - SEFavoritesQuery (stackoverflow is the default site. This will search on your local favorites without fetching online)
 
 Examples:
+
 ```
 :SEFavoritesQuery query
-:SEFavoritesQuery query askubuntu 
+:SEFavoritesQuery query askubuntu
 ```
 
 - CloseBuffer (Just closes the buffer vim-stackexchange opened, same as `q!`)
@@ -76,13 +78,19 @@ Askubuntu query of cron favorites:
 ![askubuntu](/images/askubuntu.png)
 
 ## DONE
+
 - Fetching favorites from any stackexchange site, tested on stackoverflow, askubuntu
-    - Data is saved under plugin directory
+  - Data is saved under plugin directory
 - Query a search, and show in a new buffer
 
 ## TODO
+
 - Fan out to show full question with a shortcut
 - Open full question and answers on another buffer
 - Polish commands for favorites
+
+## Documentation
+
+http://vimdoc.sourceforge.net/htmldoc/if_pyth.html
 
 # NB: Not ready for release. Still work in progress.

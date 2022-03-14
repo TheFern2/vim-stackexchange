@@ -135,7 +135,7 @@ def open_question():
         lines.append("Question: " + questions_lst[buff_name][curr_line].title + "\n\n")
         answer_lines = fetch_question_answers(questions_lst[buff_name][curr_line].site, questions_lst[buff_name][curr_line].id)
         lines.extend(answer_lines)
-        lines.append('{}'.format(sys.version_info))
+        # lines.append('{}'.format(sys.version_info))
 
         # output to file
         new_uuid = uuid.uuid1()

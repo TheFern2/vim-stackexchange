@@ -1,5 +1,5 @@
 if !has('python3')
-  echo 'vim-stackexchange requires python3 support'
+  echo 'vim-stackexchange requires python3 support, python2 out of support 2020!'
   finish
 endif
 
@@ -14,6 +14,7 @@ python_root_dir = normpath(join(plugin_root_dir, '..', 'python'))
 sys.path.insert(0, python_root_dir)
 import fab_stackexchange
 EOF
+
 
 " def favorites_query(query, site=main_site, search_body=False):
 function! SEFavoritesQuery(...)

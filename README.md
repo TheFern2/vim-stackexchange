@@ -1,16 +1,20 @@
 ## vim-stackexchange
 
-> SO changed their web pages to say bookmarks now, after being called favorites for so many years. Funny enough not too long after I started working on this project they changed the name. The API 2.2 still says favorites, for me they will always be favorites.
-
-A Vim plugin for searching questions in any stackexchange site.
+A Vim plugin for searching favorites in any stackexchange site.
 It can also download all your favorites for any site, and be able to filter them. Say goodbye to your browser while you are in vim!
 
 ## Requirements
 
 - vim (I've tested on neovim, let me know if is not compatible with vim)
-- python2.7
-- requests package
-- HTMLParser package
+- python3
+```
+pip3 install requests
+```
+
+- working on python2 support, the python script works fine on both, but having issues on the vimscript.
+```
+pip3 install requests HTMLParser
+```
 
 ## Setup
 
@@ -33,7 +37,7 @@ https://api.stackexchange.com/docs/write
 
 ## Install plugin with vim-plug
 
-For now it is locally managed, I haven't tested the official way. Add `vim-stackexchange` to your vim configuration.
+For now it is locally managed, I haven't tested the official way. Add `vim-stackexchange` to your vim configuration. Just use git clone.
 
 ```
 " Unmanaged plugin (manually installed and updated)

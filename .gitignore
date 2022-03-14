@@ -4,4 +4,3 @@ data/*
 temp/*
 .vscode/*
 python/test.py
-python/settings.ini

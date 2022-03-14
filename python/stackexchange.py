@@ -9,6 +9,7 @@ import errno
 import sys
 import re
 from HTMLParser import HTMLParser
+import uuid
 import vim
 
 # class QuestionInfo:
@@ -26,8 +27,8 @@ class Question:
         self.id = id
         self.link = link
 
-
-questions_lst = []
+vim.current.buffer.append("hello loaded plugin")
+questions_lst = {}
 
 # need this to be able to test with vim and without vim
 # though we don't want an error, is expected not to find vim
@@ -45,18 +46,9 @@ if found or vim_test:
     import vim
     plugin_root_dir = vim.eval('s:plugin_root_dir')
     data_dir = normpath(join(plugin_root_dir, '..', 'data'))
+    temp_data_dir = normpath(join(plugin_root_dir, '..', 'temp'))
 else:
     data_dir = '../data'
-
-# test data
-# /home/kodaman/git/vim-stackexchange/plugin/data/fav.json
-# data_dir + '/data/fav.json'
-# if not found:
-#     try:
-#         with open(data_dir + '/stackoverflow/page1.json') as f:
-#             fav_data = json.load(f)
-#     except:
-#         pass
 
 main_url = 'http://api.stackexchange.com/2.2'
 main_site = 'stackoverflow'
@@ -70,25 +62,26 @@ def search(query, site=main_site):
     questions = requests.get(main_url + search_url)
     return questions
 
-# def favorites(query=None, site=main_site):
-#     favorites_url = '/me/favorites?order=desc&sort=activity&site=%s&access_token=%s&key=%s' % (site, access_token, key)
-#     favorites = requests.get(main_url + favorites_url)
-#     favorites_query(query, favorites.json())
-#     return favorites
 
-'''
-    Filter favorites based on a query, search on tags, and title.
-    Return new object as list of tuples
-'''
 def favorites_query(query, site=main_site, search_body=False):
+    '''
+        Filter favorites based on a query, search on tags, title, and body.
+        Append questions to newly created buffer
+    '''
 
-    vim.command('vnew __stackexchange__')
+    # get list of current buffers
+    # if one from the dict doesn't match
+    # then free up memory
+
+    new_uuid = uuid.uuid1()
+    questions_lst[str(new_uuid)] = []
+    vim.command('e {}/{}'.format(temp_data_dir, str(new_uuid)))
     # vim.current.buffer.append('Current site: {}, search_body: {}'.format(site, search_body))
 
     # count the number of files
     num_of_files = len(os.listdir("{}/{}".format(data_dir, site)))
     question_number = 1
-    lines = []
+    # lines = []
 
     for index in range(num_of_files):
         # vim.current.buffer.append("Number of files: {}".format(num_of_files))
@@ -121,7 +114,7 @@ def favorites_query(query, site=main_site, search_body=False):
                     #print(link)
                     #print(question_number)
                     question_number += 1
-                    questions_lst.append(Question(site, title, question_number, question_id, link))
+                    questions_lst[str(new_uuid)].append(Question(site, title, question_number, question_id, link))
                     #print("---------------------------------")
                     continue
 
@@ -131,7 +124,7 @@ def favorites_query(query, site=main_site, search_body=False):
                         #print(link)
                         #print(question_number)
                         question_number += 1
-                        questions_lst.append(Question(site, title, question_number, question_id, link))
+                        questions_lst[str(new_uuid)].append(Question(site, title, question_number, question_id, link))
                         #print("---------------------------------")
 
         except Exception as e:
@@ -139,16 +132,23 @@ def favorites_query(query, site=main_site, search_body=False):
 
 
 def open_question():
+    cb = vim.current.buffer
     current_window = vim.current.window
     pos = current_window.cursor
     curr_line = pos[0] - 2
+    buff_name = os.path.basename(cb.name)
 
-    if curr_line >= 0 and curr_line <= len(questions_lst):
-        vim.command('vnew __question_{}__'.format(questions_lst[curr_line].id))
+    vim.command('vnew __question__')
+    vim.current.buffer.append('Curr buffer name {}'.format(cb.name))
+
+    if curr_line >= 0 and curr_line <= len(questions_lst[buff_name]):
+        # vim.command('vnew __question_{}__'.format(questions_lst[cb.name][curr_line].id))
         # prob put link at top
-        vim.current.buffer.append(questions_lst[curr_line].link)
-        vim.current.buffer.append(questions_lst[curr_line].title)
-        fetch_question_answers(questions_lst[curr_line].site, questions_lst[curr_line].id)
+        vim.current.buffer.append(questions_lst[buff_name][curr_line].link)
+        vim.current.buffer.append('')
+        vim.current.buffer.append(questions_lst[buff_name][curr_line].title)
+        vim.current.buffer.append('')
+        fetch_question_answers(questions_lst[buff_name][curr_line].site, questions_lst[buff_name][curr_line].id)
 
 
 def fetch_question_answers(site, id):
@@ -160,10 +160,13 @@ def fetch_question_answers(site, id):
     except Exception:
         print("Failed to fetch question {}".format(id))
         sys.exit()
-    vim.current.buffer.append('How many answers {}'.format(len(answers_json)))
+
+    vim.current.buffer.append('')
+    # vim.current.buffer.append('How many answers {}'.format(len(answers_json['items'])))
 
     items = answers_json['items']
     for index, item in enumerate(items):
+        vim.current.buffer.append('')
         vim.current.buffer.append('Answer {}'.format(index + 1))
         # clean_text = remove_html_tags(item['body'])
         parser = HTMLParser()
@@ -176,37 +179,6 @@ def fetch_question_answers(site, id):
 def remove_html_tags(text):
     clean = re.compile('<.*?>')
     return re.sub(clean, '', text)
-
-def fetch_all_favorites_offline(site=main_site):
-
-    # count the number of files
-    num_of_files = len(os.listdir("{}/{}".format(data_dir, site)))
-    question_number = 1
-
-    if num_of_files == 0:
-        print("Fetch data first!")
-        return
-
-    for index in range(num_of_files):
-        try:
-            with open('{}/{}/page{}.json'.format(data_dir, site, index + 1)) as f:
-                data = json.load(f)
-
-            for item in data['items']:
-                tags = item['tags']
-                title = item['title']
-                question_id = item['question_id']
-                link = item['link']
-                body = item['body']
-                
-                print(title)
-                print(link)
-                print(question_number)
-                question_number += 1
-                print("---------------------------------")
-
-        except Exception as e:
-            print(e)
 
 
 def fetch_favorites(site=main_site):

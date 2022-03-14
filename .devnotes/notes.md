@@ -3,6 +3,8 @@
 http://vimdoc.sourceforge.net/htmldoc/if_pyth.html
 https://vimhelp.org/if_pyth.txt.html
 
+https://stackoverflow.com/questions/11405996/how-can-i-use-python-to-replace-html-escape-characters
+
 ## Favorites are fetched from online to an offline cache
 
 favorites_url = '/me/favorites?page=%d&pagesize=100&order=desc&sort=activity&site=%s&access_token=%s&key=%s&filter=!9Z(-wwYGT' % (page, site, access_token, key)
@@ -30,3 +32,18 @@ favorites_url = '/me/favorites?page=%d&pagesize=100&order=desc&sort=activity&sit
 - fan out question body
 - dataclass to keep track of question start end lines
 - favorite / unfavorite question
+- data and temp dirs creation in code
+
+## March 13 2022
+
+new query
+- Open new queries in new buffers, s_ex_uuid
+- save questions query in dictionary by key uuid
+- when a new query comes in, check buffers, if one is closed, remove from dictionary
+
+- might be easier to save queries to files in plugin temp dir
+
+fromdate query
+- check if dates are sequential on json data (script)
+- check last date pulled
+- count how many questions the last file has, append new questions coming thru

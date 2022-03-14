@@ -1,5 +1,5 @@
 import requests
-import secrets
+import configparser
 import json
 import time
 from os.path import normpath, join
@@ -36,6 +36,7 @@ questions_lst = {}  # uuid -> [Question]
 plugin_root_dir = vim.eval('s:plugin_root_dir')
 data_dir = normpath(join(plugin_root_dir, '..', 'data'))
 temp_data_dir = normpath(join(plugin_root_dir, '..', 'temp'))
+python_dir = normpath(join(plugin_root_dir, '..', 'python'))
 
 if not os.path.exists(temp_data_dir):
     os.mkdir(temp_data_dir)
@@ -44,15 +45,16 @@ else:
     os.mkdir(temp_data_dir)
 
 if not os.path.exists(data_dir):
-    os.mkdir(data_dir)
-    
+    os.mkdir(data_dir)    
+
+config = configparser.ConfigParser()
+config.read(python_dir + '/' + 'settings.ini')
+access_token = config['settings']['access_token']
 
 main_url = 'http://api.stackexchange.com/2.2'
 main_site = 'stackoverflow'
 client_id = '17697'
 key = 'BptNntl7JkmV6xrE3tLaEA(('
-
-access_token = secrets.access_token
 
 def search(query, site=main_site):
     search_url = '/search/excerpts?order=desc&sort=activity&q=%s&site=%s' % (query, site) 

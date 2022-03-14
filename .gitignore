@@ -3,4 +3,5 @@ python/secrets.py
 data/*
 temp/*
 .vscode/*
-test
+python/test.py
+python/settings.ini

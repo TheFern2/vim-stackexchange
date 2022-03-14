@@ -3,3 +3,4 @@ python/secrets.py
 data/*
 temp/*
 .vscode/*
+test

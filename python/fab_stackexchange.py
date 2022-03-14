@@ -45,11 +45,19 @@ else:
     os.mkdir(temp_data_dir)
 
 if not os.path.exists(data_dir):
-    os.mkdir(data_dir)    
+    os.mkdir(data_dir)
 
 config = configparser.ConfigParser()
-config.read(python_dir + '/' + 'settings.ini')
-access_token = config['settings']['access_token']
+settings_path = python_dir + '/' + 'settings.ini'
+if not os.path.exists(settings_path):
+      config.add_section('settings')
+      config.set('settings', 'access_token', 'your_token_here!')
+      with open(settings_path, 'w+') as f:
+          config.write(f)
+else:
+    config = configparser.ConfigParser()
+    config.read(python_dir + '/' + 'settings.ini')
+    access_token = config['settings']['access_token']
 
 main_url = 'http://api.stackexchange.com/2.2'
 main_site = 'stackoverflow'

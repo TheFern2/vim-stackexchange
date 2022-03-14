@@ -26,10 +26,12 @@ https://stackexchange.com/oauth/dialog?client_id=17697&scope=no_expiry,write_acc
 
 If you were logged in, you'll get an access token back in the url.
 
-Inside the python folder, create a `secrets.py` file and replace with your token:
+Go inside the plugins folder, example: ~/.vim/plugged/vim-stackexchange/python, and
+rename sample.settings.ini to settings.ini
 
 ```
-access_token="your_access_token"
+[settings]
+access_token=replace_with_your_token!
 ```
 
 https://api.stackexchange.com/docs/authentication#scope

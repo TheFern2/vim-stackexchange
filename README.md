@@ -39,14 +39,19 @@ https://api.stackexchange.com/docs/write
 
 ## Install plugin with vim-plug
 
-For now it is locally managed, I haven't tested the official way. Add `vim-stackexchange` to your vim configuration. Just use git clone.
+For local development install as unmanaged plugin, using git clone:
 
 ```
 " Unmanaged plugin (manually installed and updated)
 Plug '~/git/sample-plugin'
 Plug '~/git/vim-stackexchange'
-
 ```
+
+For regular install:
+```
+Plug 'TheFern2/vim-stackexchange'
+```
+
 
 ## Vim Commands
 
